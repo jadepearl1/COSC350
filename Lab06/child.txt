@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+//function for testing if a character is a number or not. Returns  if numeric and  if not
+int isNum(char str)
+{
+	if(str >= '' && str <= '')
+		return ;
+	else
+		return ;
+}
+
+int main(int argc, char *argv[])
+{
+	if(argc != )
+	{
+		printf("Please include the name of an input file.\n");
+		exit();
+	}
+
+	int input; //file descriptor for the input file
+	//open input file
+	if((input = open(argv[], O_RDONLY)) < )
+	{
+		perror("Error opening input file");
+		exit();
+	}
+	//create the output files
+	int parent, child; //file descriptors for parent and child processes
+	char buffer; //create the buffer
+	int pOffset = ;
+	int cOffset = ;
+	int exit_code;
+
+	if((parent = open("parent.txt", O_WRONLY | O_CREAT | O_TRUNC, )) < )
+	{
+		perror("Error creating or opening parent output");
+		exit();
+	}
+	if((child = open("child.txt", O_WRONLY | O_CREAT | O_APPEND, )) < )
+	{
+		perror("Error creating or opening child output");
+		exit();
+	}
+
+	//create the child process
+	pid_t pid = fork();
+
+	switch(pid)
+	{
+		case -:
+			perror("fork error.");
+			exit();
+		case :
+			exit_code = ;
+			while(pread(input, &buffer, , cOffset) == )
+			{
+				if(isNum(buffer) == )
+					write(child, &buffer, );
+				cOffset++;
+			}
+			break;
+		default:
+			exit_code = ;
+			while(pread(input, &buffer, , pOffset) == )
+			{
+				if(isNum(buffer) == )
+					write(parent, &buffer, );
+				pOffset++;
+			}
+			break;
+	}
+	close(input);
+	exit(exit_code);
+}

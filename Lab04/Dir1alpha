@@ -1,0 +1,78 @@
+  task  c accepts four file names as command line arguments  the first is input file
+   and the others are output files   Read byte by byte from the input file and write to the
+   proper output file  Alphabetical characters letters write to a file called alpha  numerical
+   characters write to a file called num and other characters go to a file called other
+ 
+  include  unistd h 
+  include  fcntl h 
+  include  stdio h 
+  include  stdlib h 
+  include  sys stat h 
+  include  sys types h 
+ 
+   create an error function for ease of writing in the main function
+ void err sys char  str 
+  
+  printf   s n   str  
+  exit    
+  
+ 
+ int main int argc  char  argv   
+  
+  umask    
+  char buffer 
+  if argc    
+   err sys  Name exactly   files    
+ 
+    create file descriptors
+  int in  a  n  o    input  alpha  num  other
+  if  in   open argv     O RDONLY       
+   err sys  Error opening input file    
+  if  a   open argv     O RDWR   O CREAT                file mode rwxrwxrwx
+   err sys  Error opening alpha file    
+  if  n   open argv     O RDWR   O CREAT             
+   err sys  Error opening num file    
+  if  o   open argv     O RDWR   O CREAT             
+   err sys  Error opening other file    
+ 
+    read input file byte by byte
+  while  read in   buffer          
+   
+   if buffer      n     put the new lines in the files
+    
+    write a   buffer     
+    write n   buffer     
+    write o   buffer     
+    
+     the input file is an ASCII file  so we can convert the     digit
+     ASCII numbers into characters
+     which makes it easier to define a range of characters
+ 
+     detect if the character is a letter and write to alpha
+   if  buffer     a     buffer     z       buffer     A     buffer     Z   
+    write a   buffer     
+   else   put a space in alpha if not a letter
+    write a          
+     detect if the character is a number and write to num
+   if buffer           buffer        
+    write n   buffer     
+   else
+    write n          
+     detect if the character is neither a letter or number and output to other
+   if  int buffer           int buffer           int buffer           int buffer       
+    write o   buffer     
+   else if  int buffer           int buffer           int  buffer            int buffer        
+    write o   buffer     
+   else   if not special character  put a space
+    write o          
+   
+ 
+    close the files once done
+  close in  
+  close a  
+  close n  
+  close o  
+ 
+  return   
+  
+ 
